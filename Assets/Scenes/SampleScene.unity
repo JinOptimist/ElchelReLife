@@ -432,7 +432,7 @@ Transform:
   m_GameObject: {fileID: 2071583241}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: -0.5, z: 0}
-  m_LocalScale: {x: 10, y: 10, z: 10}
+  m_LocalScale: {x: 2, y: 2, z: 2}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 2
@@ -453,6 +453,16 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Enabled
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3136249986116265353, guid: 1eb128942b0bdfa499c968aa5238322c,
+        type: 3}
+      propertyPath: TimeOfTurn
+      value: 500
+      objectReference: {fileID: 0}
+    - target: {fileID: 3136249986116265354, guid: 1eb128942b0bdfa499c968aa5238322c,
+        type: 3}
+      propertyPath: m_IsKinematic
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3136249986116265355, guid: 1eb128942b0bdfa499c968aa5238322c,
         type: 3}

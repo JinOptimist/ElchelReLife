@@ -9,7 +9,7 @@ namespace Assets.LifeLogic
 {
     class CellBuilder
     {
-        public static double ChanceOfMutation = 0.2;
+        public static double ChanceOfMutation = 0.1;
 
         public static Random _random = new Random();
         public static Action<Cell> AfterCellBurn;
@@ -89,10 +89,20 @@ namespace Assets.LifeLogic
                 return false;
             }
 
-            var gen = GetRandomGen(cell);
-            if (gen != null)
+            if (_random.Next(2) > 1)
             {
-                cell.Genome.Add(gen);
+                //lose old gen
+                var index = _random.Next(cell.Genome.Count - 1);
+                cell.Genome.RemoveAt(index);
+            }
+            else
+            {
+                //Add new gen
+                var gen = GetRandomGen(cell);
+                if (gen != null)
+                {
+                    cell.Genome.Add(gen);
+                }
             }
 
             return true;

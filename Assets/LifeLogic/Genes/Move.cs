@@ -4,6 +4,7 @@ namespace Assets.LifeLogic.Genes
 {
     public class Move : AbstractGen
     {
+        public int MoveEnergy = 1;
         public Direction Direction { get; set; }
         public Move(Cell cell) : base(cell)
         {
@@ -11,10 +12,16 @@ namespace Assets.LifeLogic.Genes
 
         public override void Do()
         {
-            if (God.Cells.Any(x => x.X == Cell.X && x.Y == Cell.Y))
+            if (Cell.StoreEnegry > MoveEnergy)
             {
+                Cell.StoreEnegry -= MoveEnergy;
                 CellBuilder.TryToMove(Cell, Direction);
             }
+        }
+
+        public override string ToString()
+        {
+            return $"M:{(int)Direction}";
         }
     }
 

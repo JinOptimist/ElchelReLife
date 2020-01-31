@@ -10,8 +10,21 @@
 
         public override void Do()
         {
-            Cell.StoreEnegry -= BurnCost;
-            CellBuilder.CellBurnChild(Cell);
+            var burnCost = BurnCost + Cell.Genome.Count / 3;
+            if (Cell.StoreEnegry > burnCost)
+            {
+                Cell.StoreEnegry -= burnCost;
+                CellBuilder.CellBurnChild(Cell);
+            }
+            //else
+            //{
+            //    Cell.StoreEnegry = 0;
+            //}
+        }
+
+        public override string ToString()
+        {
+            return "B";
         }
     }
 }

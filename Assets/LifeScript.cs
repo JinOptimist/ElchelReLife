@@ -9,6 +9,7 @@ using UnityEngine;
 
 public class LifeScript : MonoBehaviour
 {
+    public float TimeOfTurn = 1000;
     public GodCanDoAnything GodCanDoAnything;
 
     public Cell Cell { get; set; }
@@ -24,15 +25,22 @@ public class LifeScript : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if ((DateTime.Now - LastTurnTime).TotalSeconds > 1)
+        if ((DateTime.Now - LastTurnTime).TotalMilliseconds > TimeOfTurn)
         {
-            if (Cell.StoreEnegry < 0)
+            if (Cell.StoreEnegry < 0
+                || transform.position.y < -1)
             {
+                if (Cell.StoreEnegry < 0)
+                {
+                    Debug.Log($"ZeroEnergy: {Cell}");
+                }
+
                 Dead();
                 return;
             }
 
             Cell.Turn();
+            Debug.Log(Cell);
             LastTurnTime = DateTime.Now;
         }
 

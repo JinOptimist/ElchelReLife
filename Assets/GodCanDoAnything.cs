@@ -13,20 +13,23 @@ public class GodCanDoAnything : MonoBehaviour
     {
         CellBuilder.AfterCellBurn = Burn;
 
-        var cell = CellBuilder.GetDefaultCell();
-        God.Cells.Add(cell);
-        Burn(cell);
+        
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+        if (!God.Cells.Any())
+        {
+            var cell = CellBuilder.GetDefaultCell();
+            God.Cells.Add(cell);
+            Burn(cell);
+        }
     }
 
     public void Burn(Cell cell)
     {
-        Debug.Log($"Burn new one [{cell.X},{cell.Y}]");
+        Debug.Log($"Burn new one [{cell}]");
         if (God.Cells.Any(x => x.X == cell.X && x.Y == cell.Y && x != cell))
         {
             Debug.LogError("Duplicate!");
@@ -36,5 +39,7 @@ public class GodCanDoAnything : MonoBehaviour
         child.transform.position = new Vector3(cell.X, 0, cell.Y);
         child.GetComponent<LifeScript>().Cell = cell;
         child.GetComponent<LifeScript>().enabled = true;
+
+        child.GetComponent<Rigidbody>().isKinematic = false;
     }
 }

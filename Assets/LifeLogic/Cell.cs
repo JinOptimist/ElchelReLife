@@ -25,7 +25,8 @@ namespace Assets.LifeLogic
 
         public override string ToString()
         {
-            return $"C:[{X},{Y}].E:{StoreEnegry}.L:{LifePoint}.G:{Genome.Count}";
+            var genome = string.Join(" ", Genome.Select(x => $"{x}"));
+            return $"C:[{X},{Y}].E:{StoreEnegry}.L:{LifePoint}.G:{Genome.Count}. GenCode: {genome}";
         }
     }
 }
