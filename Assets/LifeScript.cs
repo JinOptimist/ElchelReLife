@@ -9,49 +9,39 @@ using UnityEngine;
 
 public class LifeScript : MonoBehaviour
 {
-    private DateTime LastTurnTime { get; set; }
+    public GodCanDoAnything GodCanDoAnything;
 
     public Cell Cell { get; set; }
+
+    private DateTime LastTurnTime { get; set; }
 
     // Start is called before the first frame update
     void Start()
     {
         LastTurnTime = DateTime.Now;
-
-        if (!God.Cells.Any())
-        {
-            Cell = CellBuilder.GetDefaultCell();
-            God.Cells.Add(Cell);
-            CellBuilder.AfterCellBurn = Burn;
-        }
     }
 
     // Update is called once per frame
     void Update()
     {
-
         if ((DateTime.Now - LastTurnTime).TotalSeconds > 1)
         {
-            Cell.Turn();
-            LastTurnTime = DateTime.Now;
-
             if (Cell.StoreEnegry < 0)
             {
-                God.Cells.Remove(Cell);
-                Destroy(this);
+                Dead();
+                return;
             }
+
+            Cell.Turn();
+            LastTurnTime = DateTime.Now;
         }
+
+        transform.position = new Vector3(Cell.X, transform.position.y, Cell.Y);
     }
 
-    private void Burn(Cell cell)
+    private void Dead()
     {
-        Debug.Log($"Burn new one [{cell.X},{cell.Y}]");
-        if (God.Cells.Any(x => x.X == cell.X && x.Y == cell.Y && x != cell))
-        {
-            Debug.LogError("Duplicate!");
-        }
-        var child = Instantiate(this);
-        child.transform.position = new Vector3(cell.X, transform.position.y, cell.Y);
-        child.Cell = cell;
+        God.Cells.Remove(Cell);
+        Destroy(gameObject);
     }
 }

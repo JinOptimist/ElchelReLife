@@ -20,11 +20,12 @@ namespace Assets.LifeLogic
         public void Turn()
         {
             Genome.ForEach(x => x.Do());
+            CellBuilder.Mutate(this);
         }
 
         public override string ToString()
         {
-            return $"[{X},{Y}]E:{StoreEnegry}L:{LifePoint}";
+            return $"C:[{X},{Y}].E:{StoreEnegry}.L:{LifePoint}.G:{Genome.Count}";
         }
     }
 }

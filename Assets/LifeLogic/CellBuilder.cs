@@ -9,6 +9,9 @@ namespace Assets.LifeLogic
 {
     class CellBuilder
     {
+        public static double ChanceOfMutation = 0.2;
+
+        public static Random _random = new Random();
         public static Action<Cell> AfterCellBurn;
         public static Cell CellBurnChild(Cell parent)
         {
@@ -39,14 +42,10 @@ namespace Assets.LifeLogic
             cell.X = 0;
             cell.Y = 0;
             cell.LifePoint = 10;
-            cell.StoreEnegry = 1;
+            cell.StoreEnegry = 10;
             cell.Genome = new List<AbstractGen>();
             cell.Genome.Add(new Photosynthesis(cell));
-            cell.Genome.Add(new Photosynthesis(cell));
-            cell.Genome.Add(new Photosynthesis(cell));
-            cell.Genome.Add(new Photosynthesis(cell));
-            cell.Genome.Add(new Photosynthesis(cell));
-            cell.Genome.Add(new Burn(cell));
+            
             return cell;
         }
 
@@ -60,6 +59,10 @@ namespace Assets.LifeLogic
             child.Genome = new List<AbstractGen>();
             foreach (var gen in parent.Genome)
             {
+                if (Mutate(child))
+                {
+                    continue;
+                }
                 if (gen is Burn)
                 {
                     child.Genome.Add(new Burn(child));
@@ -68,98 +71,145 @@ namespace Assets.LifeLogic
                 {
                     child.Genome.Add(new Photosynthesis(child));
                 }
+                else if (gen is Move)
+                {
+                    var move = new Move(child);
+                    move.Direction = (gen as Move).Direction;
+                    child.Genome.Add(move);
+                }
             }
 
             return child;
         }
 
+        public static bool Mutate(Cell cell)
+        {
+            if (_random.NextDouble() < ChanceOfMutation)
+            {
+                return false;
+            }
+
+            var gen = GetRandomGen(cell);
+            if (gen != null)
+            {
+                cell.Genome.Add(gen);
+            }
+
+            return true;
+        }
+
+        private static AbstractGen GetRandomGen(Cell cell)
+        {
+            //Chance of drop gen
+            var rndNumber = _random.Next(1, 4);
+            switch (rndNumber)
+            {
+                case 1:
+                    return new Photosynthesis(cell);
+                case 2:
+                    var move = new Move(cell);
+                    move.Direction = (Direction)_random.Next(1, 8);
+                    return move;
+                case 3:
+                    return new Burn(cell);
+            }
+            
+            return null;
+        }
+
         private static List<Cell> NearCells(Cell cell)
         {
-            return God.Cells.Where(rndCell => 
+            return God.Cells.Where(rndCell =>
                 Math.Abs(rndCell.X - cell.X) <= 1
                 && Math.Abs(rndCell.Y - cell.Y) <= 1).ToList();
         }
 
         private static void MoveToEmptySlot(Cell cell, List<Cell> nearCells)
         {
-            var rnd = new Random();
             var findPlace = false;
-            var dir = 0;
             while (!findPlace)
             {
                 // 1 2 3
                 // 8 x 4
                 // 7 6 5
-                dir = rnd.Next(1, 8);
-                switch (dir)
-                {
-                    case 1:
-                        if (!nearCells.Any(x=>x.X == cell.X - 1 && x.Y == cell.Y - 1))
-                        {
-                            cell.X -= 1;
-                            cell.Y -= 1;
-                            findPlace = true;
-                        }
-                        break;
-                    case 2:
-                        if (!nearCells.Any(x => x.X == cell.X && x.Y == cell.Y - 1))
-                        {
-                            cell.Y -= 1;
-                            findPlace = true;
-                        }
-                        break;
-                    case 3:
-                        if (!nearCells.Any(x => x.X == cell.X + 1 && x.Y == cell.Y - 1))
-                        {
-                            cell.X += 1;
-                            cell.Y -= 1;
-                            findPlace = true;
-                        }
-                        break;
-                    case 4:
-                        if (!nearCells.Any(x => x.X == cell.X + 1 && x.Y == cell.Y))
-                        {
-                            cell.X += 1;
-                            findPlace = true;
-                        }
-                        break;
-                    case 5:
-                        if (!nearCells.Any(x => x.X == cell.X + 1 && x.Y == cell.Y + 1))
-                        {
-                            cell.X += 1;
-                            cell.Y += 1;
-                            findPlace = true;
-                        }
-                        break;
-                    case 6:
-                        if (!nearCells.Any(x => x.X == cell.X && x.Y == cell.Y + 1))
-                        {
-                            cell.Y += 1;
-                            findPlace = true;
-                        }
-                        break;
-                    case 7:
-                        if (!nearCells.Any(x => x.X == cell.X - 1 && x.Y == cell.Y + 1))
-                        {
-                            cell.X -= 1;
-                            cell.Y += 1;
-                            findPlace = true;
-                        }
-                        break;
-                    case 8:
-                        if (!nearCells.Any(x => x.X == cell.X - 1 && x.Y == cell.Y))
-                        {
-                            cell.X -= 1;
-                            findPlace = true;
-                        }
-                        break;
-                }
+                var direction = (Direction)_random.Next(1, 8);
+                findPlace = TryToMove(cell, direction, nearCells);
+            }
+        }
+
+        public static bool TryToMove(Cell cell, Direction direction, List<Cell> nearCells = null)
+        {
+            if (nearCells == null)
+            {
+                nearCells = NearCells(cell);
             }
 
-            if (God.Cells.Any(x => x.X == cell.X && x.Y == cell.Y && x != cell))
+            var findPlace = false;
+            switch (direction)
             {
-                var bad = 1;
+                case Direction.UpLeft:
+                    if (!nearCells.Any(x => x.X == cell.X - 1 && x.Y == cell.Y - 1))
+                    {
+                        cell.X -= 1;
+                        cell.Y -= 1;
+                        findPlace = true;
+                    }
+                    break;
+                case Direction.Up:
+                    if (!nearCells.Any(x => x.X == cell.X && x.Y == cell.Y - 1))
+                    {
+                        cell.Y -= 1;
+                        findPlace = true;
+                    }
+                    break;
+                case Direction.UpRight:
+                    if (!nearCells.Any(x => x.X == cell.X + 1 && x.Y == cell.Y - 1))
+                    {
+                        cell.X += 1;
+                        cell.Y -= 1;
+                        findPlace = true;
+                    }
+                    break;
+                case Direction.Right:
+                    if (!nearCells.Any(x => x.X == cell.X + 1 && x.Y == cell.Y))
+                    {
+                        cell.X += 1;
+                        findPlace = true;
+                    }
+                    break;
+                case Direction.DownRight:
+                    if (!nearCells.Any(x => x.X == cell.X + 1 && x.Y == cell.Y + 1))
+                    {
+                        cell.X += 1;
+                        cell.Y += 1;
+                        findPlace = true;
+                    }
+                    break;
+                case Direction.Down:
+                    if (!nearCells.Any(x => x.X == cell.X && x.Y == cell.Y + 1))
+                    {
+                        cell.Y += 1;
+                        findPlace = true;
+                    }
+                    break;
+                case Direction.DownLeft:
+                    if (!nearCells.Any(x => x.X == cell.X - 1 && x.Y == cell.Y + 1))
+                    {
+                        cell.X -= 1;
+                        cell.Y += 1;
+                        findPlace = true;
+                    }
+                    break;
+                case Direction.Left:
+                    if (!nearCells.Any(x => x.X == cell.X - 1 && x.Y == cell.Y))
+                    {
+                        cell.X -= 1;
+                        findPlace = true;
+                    }
+                    break;
             }
+
+            return findPlace;
         }
     }
 }
