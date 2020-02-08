@@ -1,4 +1,5 @@
 ﻿using Assets.LifeLogic;
+using Assets.LifeLogic.Genes;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,8 +13,6 @@ public class GodCanDoAnything : MonoBehaviour
     void Start()
     {
         CellBuilder.AfterCellBurn = Burn;
-
-        
     }
 
     // Update is called once per frame
@@ -36,10 +35,22 @@ public class GodCanDoAnything : MonoBehaviour
         }
 
         var child = Instantiate(CellTemplate);
+        var lifeScript = child.GetComponent<LifeScript>();
+        cell.AfterCellDie = lifeScript.Die;
+        lifeScript.Cell = cell;
+        lifeScript.enabled = true;
+
         child.transform.position = new Vector3(cell.X, 0, cell.Y);
-        child.GetComponent<LifeScript>().Cell = cell;
-        child.GetComponent<LifeScript>().enabled = true;
 
         child.GetComponent<Rigidbody>().isKinematic = false;
+
+        if (cell.Genome.OfType<Bite>().Any())
+        {
+            child.GetComponent<MeshRenderer>().material = lifeScript.PredatorMaterial;
+        }
+        else
+        {
+            child.GetComponent<MeshRenderer>().material = lifeScript.РerbivorousMaterial;
+        }
     }
 }

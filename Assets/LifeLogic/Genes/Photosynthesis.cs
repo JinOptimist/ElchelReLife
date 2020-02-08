@@ -2,14 +2,13 @@
 {
     public class Photosynthesis : AbstractGen
     {
-        public int MaxEnergy = 10;
         public Photosynthesis(Cell cell) : base(cell)
         {
         }
 
         public override void Do()
         {
-            if (Cell.StoreEnegry < MaxEnergy)
+            if (Cell.StoreEnegry < Cell.MaxStoreEnegry)
             {
                 Cell.StoreEnegry += 1;
             }

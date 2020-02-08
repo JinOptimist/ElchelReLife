@@ -10,7 +10,11 @@ using UnityEngine;
 public class LifeScript : MonoBehaviour
 {
     public float TimeOfTurn = 1000;
+    public int Border = 5;
     public GodCanDoAnything GodCanDoAnything;
+
+    public Material РerbivorousMaterial;
+    public Material PredatorMaterial;
 
     public Cell Cell { get; set; }
 
@@ -28,26 +32,35 @@ public class LifeScript : MonoBehaviour
         if ((DateTime.Now - LastTurnTime).TotalMilliseconds > TimeOfTurn)
         {
             if (Cell.StoreEnegry < 0
-                || transform.position.y < -1)
+                || Cell.LifePoint < 1
+                || CellOutOfBorder())
             {
                 if (Cell.StoreEnegry < 0)
                 {
                     Debug.Log($"ZeroEnergy: {Cell}");
                 }
 
-                Dead();
+                Die();
                 return;
             }
 
             Cell.Turn();
-            Debug.Log(Cell);
+            //Debug.Log(Cell);
             LastTurnTime = DateTime.Now;
         }
 
         transform.position = new Vector3(Cell.X, transform.position.y, Cell.Y);
     }
 
-    private void Dead()
+    private bool CellOutOfBorder()
+    {
+        return Cell.X < -Border
+            || Cell.Y < -Border
+            || Cell.X > Border
+            || Cell.Y > Border;
+    }
+
+    public void Die()
     {
         God.Cells.Remove(Cell);
         Destroy(gameObject);

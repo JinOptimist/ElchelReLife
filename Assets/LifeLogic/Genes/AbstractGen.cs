@@ -9,6 +9,12 @@
 
         public Cell Cell { get; set; }
 
-        public abstract void Do();
+        public virtual void CopyGenInformation(AbstractGen gen)
+        {
+        }
+
+        public virtual void Do()
+        {
+        }
     }
 }
