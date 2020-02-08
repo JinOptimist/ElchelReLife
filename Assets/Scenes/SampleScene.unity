@@ -432,7 +432,7 @@ Transform:
   m_GameObject: {fileID: 2071583241}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: -0.5, z: 0}
-  m_LocalScale: {x: 2, y: 2, z: 2}
+  m_LocalScale: {x: 5, y: 5, z: 5}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 2
@@ -457,18 +457,23 @@ PrefabInstance:
     - target: {fileID: 3136249986116265353, guid: 1eb128942b0bdfa499c968aa5238322c,
         type: 3}
       propertyPath: TimeOfTurn
-      value: 500
+      value: 100
       objectReference: {fileID: 0}
     - target: {fileID: 3136249986116265353, guid: 1eb128942b0bdfa499c968aa5238322c,
         type: 3}
       propertyPath: PredatorMaterial
       value: 
-      objectReference: {fileID: 2100000, guid: ab1c456080391bf4fba0da19416ddc7c, type: 2}
+      objectReference: {fileID: 2100000, guid: 75be9945c5723ab468a0c689fbf6f5da, type: 2}
     - target: {fileID: 3136249986116265353, guid: 1eb128942b0bdfa499c968aa5238322c,
         type: 3}
       propertyPath: "\u0420erbivorousMaterial"
       value: 
-      objectReference: {fileID: 2100000, guid: fc12a75683bed804ab3970ee0b2a6b40, type: 2}
+      objectReference: {fileID: 2100000, guid: ab1c456080391bf4fba0da19416ddc7c, type: 2}
+    - target: {fileID: 3136249986116265353, guid: 1eb128942b0bdfa499c968aa5238322c,
+        type: 3}
+      propertyPath: Border
+      value: 20
+      objectReference: {fileID: 0}
     - target: {fileID: 3136249986116265354, guid: 1eb128942b0bdfa499c968aa5238322c,
         type: 3}
       propertyPath: m_IsKinematic

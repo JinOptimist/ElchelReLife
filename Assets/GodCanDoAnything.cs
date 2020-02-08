@@ -44,13 +44,22 @@ public class GodCanDoAnything : MonoBehaviour
 
         child.GetComponent<Rigidbody>().isKinematic = false;
 
-        if (cell.Genome.OfType<Bite>().Any())
-        {
-            child.GetComponent<MeshRenderer>().material = lifeScript.PredatorMaterial;
-        }
-        else
-        {
-            child.GetComponent<MeshRenderer>().material = lifeScript.РerbivorousMaterial;
-        }
+        var biteCount = cell.Genome.OfType<Bite>().Count();
+        var photoCount = cell.Genome.OfType<Photosynthesis>().Count();
+        var sum = photoCount + biteCount;
+        var precentBite = 1.0f  * biteCount / sum;
+        var precentPhoto = 1.0f * photoCount / sum;
+
+        var newColor = new Color(precentBite, precentPhoto, 0);
+        child.GetComponent<MeshRenderer>().material.color = newColor;
+
+        //if (cell.Genome.OfType<Bite>().Any())
+        //{
+        //    child.GetComponent<MeshRenderer>().material = lifeScript.PredatorMaterial;
+        //}
+        //else
+        //{
+        //    child.GetComponent<MeshRenderer>().material = lifeScript.РerbivorousMaterial;
+        //}
     }
 }

@@ -10,9 +10,9 @@ namespace Assets.LifeLogic
 {
     class CellBuilder
     {
-        public static double ChanceOfMutation = 0.2;
-        public static double ChanceOfLoseGen = 0.1;
-        public static double ChanceOfGetNewGen = 0.2;
+        public static double ChanceOfMutation = 0.25;
+        public static double ChanceOfLoseGen = 0.15;
+        public static double ChanceOfGetNewGen = 0.20;
 
         public static Random _random = new Random();
         public static Action<Cell> AfterCellBurn;

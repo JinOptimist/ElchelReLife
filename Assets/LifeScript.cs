@@ -10,7 +10,7 @@ using UnityEngine;
 public class LifeScript : MonoBehaviour
 {
     public float TimeOfTurn = 1000;
-    public int Border = 5;
+    public int Border = 12;
     public GodCanDoAnything GodCanDoAnything;
 
     public Material РerbivorousMaterial;
